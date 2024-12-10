@@ -11,32 +11,44 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var recipes: [RecipeEntity]
-//    @State private var selectedId: RecipeEntity.ID = nil
+    
+    func recipeList() -> some View {
+        ScrollViewReader { proxy in
+            List {
+                ForEach(recipes) { recipe in
+                    NavigationLink {
+                        Text(recipe.name)
+                    } label: {
+                        HStack {
+                            if let data = recipe.photoSmall, let uiImage = UIImage(data: data) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .clipShape(Circle())
+                            } else {
+                                Image(systemName: "fork.knife.circle.fill") // Placeholder
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.gray)
+                            }
+                            Text(recipe.name)
+                        }
+                        .onAppear {
+                            if recipe.photoSmall == nil {
+                                Task {
+                                    await recipe.fetchImage(forSmallImage: true)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     var body: some View {
         NavigationSplitView {
-            ScrollViewReader { proxy in
-                List {
-                    ForEach(recipes) { item in
-                        NavigationLink {
-                            Text("\(item.name)")
-                        } label: {
-                            Text(item.name)
-                        }
-                    }
-                    .onDelete(perform: deleteItems)
-                }
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
+            recipeList()
             .onAppear {
                 if recipes.isEmpty {
                     Task {
@@ -51,24 +63,9 @@ struct ContentView: View {
             Text("Select an item")
         }
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(recipes[index])
-            }
-        }
-    }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(for: RecipeEntity.self, inMemory: true)
 }

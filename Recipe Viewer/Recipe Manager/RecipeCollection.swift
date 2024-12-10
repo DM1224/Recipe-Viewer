@@ -14,21 +14,11 @@ struct RecipeCollection: Decodable {
     struct Recipe: Decodable {
         let cuisine: String
         let name: String
-        let photoUrlLarge: URL?
-        let photoUrlSmall: URL?
+        let photoUrlLarge: String?
+        let photoUrlSmall: String?
         let uuid: String
-        let sourceUrl: URL?
-        let youtubeUrl: URL?
-        
-        enum CodingKeys: String, CodingKey {
-            case cuisine
-            case name
-            case photoUrlLarge = "photo_url_large"
-            case photoUrlSmall = "photo_url_small"
-            case uuid
-            case sourceUrl = "source_url"
-            case youtubeUrl = "youtube_url"
-        }
+        let sourceUrl: String?
+        let youtubeUrl: String?
     }
     
     static func fetchRecipes(url: URL) async throws -> RecipeCollection {
