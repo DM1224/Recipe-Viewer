@@ -37,6 +37,13 @@ struct ContentView: View {
                     }
                 }
             }
+            .onAppear {
+                if recipes.isEmpty {
+                    Task {
+                        await RecipeCollection.refresh(modelContext: modelContext)
+                    }
+                }
+            }
             .refreshable {
                 await RecipeCollection.refresh(modelContext: modelContext)
             }
