@@ -10,7 +10,7 @@ import Foundation
 
 @Model
 class RecipeEntity {
-    @Attribute(.unique) var uuid: UUID
+    @Attribute(.unique) var uuid: String
     var name: String
     var cuisine: String
     var photoUrlLarge: URL?
@@ -18,7 +18,7 @@ class RecipeEntity {
     var sourceUrl: URL?
     var youtubeURL: URL?
     
-    init(uuid: UUID = UUID(), name: String, cuisine: String, photoUrlLarge: URL?, photoUrlSmall: URL?, sourceUrl: URL?, youtubeUrl: URL?) {
+    init(uuid: String, name: String, cuisine: String, photoUrlLarge: URL?, photoUrlSmall: URL?, sourceUrl: URL?, youtubeUrl: URL?) {
         self.uuid = uuid
         self.name = name
         self.cuisine = cuisine
@@ -38,21 +38,5 @@ class RecipeEntity {
             sourceUrl: recipe.sourceUrl,
             youtubeUrl: recipe.youtubeUrl
         )
-    }
-    
-    @MainActor
-    static func refresh(modelContext: ModelContext) async {
-        do {
-            let url = URL(string: "https://d3jbb8n5wk0qxi.cloudfront.net/recipes.json")!
-            let recipeCollection = try await RecipeCollection.fetchRecipes(url: url)
-            
-            for recipe in recipeCollection.recipes {
-                let recipeEntity = RecipeEntity(from: recipe)
-                
-                modelContext.insert(recipeEntity)
-            }
-        } catch let error {
-            print("Error refreshing recipes: \(error)")
-        }
     }
 }

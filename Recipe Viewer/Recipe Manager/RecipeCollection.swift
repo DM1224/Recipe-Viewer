@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 
 struct RecipeCollection: Decodable {
     let recipes: [Recipe]
@@ -15,7 +16,7 @@ struct RecipeCollection: Decodable {
         let name: String
         let photoUrlLarge: URL?
         let photoUrlSmall: URL?
-        let uuid: UUID
+        let uuid: String
         let sourceUrl: URL?
         let youtubeUrl: URL?
         
@@ -44,6 +45,22 @@ struct RecipeCollection: Decodable {
         }
         
         return recipesCollection
+    }
+    
+    @MainActor
+    static func refresh(modelContext: ModelContext) async {
+        do {
+            let url = URL(string: "https://d3jbb8n5wk0qxi.cloudfront.net/recipes.json")!
+            let recipeCollection = try await RecipeCollection.fetchRecipes(url: url)
+            
+            for recipe in recipeCollection.recipes {
+                let recipeEntity = RecipeEntity(from: recipe)
+                
+                modelContext.insert(recipeEntity)
+            }
+        } catch let error {
+            print("Error refreshing recipes: \(error)")
+        }
     }
 }
 
