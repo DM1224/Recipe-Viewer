@@ -53,11 +53,6 @@
 			path = "Recipe ViewerTests";
 			sourceTree = "<group>";
 		};
-		A1FC103A2D08A88700450FDF /* Recipe ViewerUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Recipe ViewerUITests";
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,7 +85,6 @@
 			children = (
 				A1FC101B2D08A88600450FDF /* Recipe Viewer */,
 				A1FC10302D08A88700450FDF /* Recipe ViewerTests */,
-				A1FC103A2D08A88700450FDF /* Recipe ViewerUITests */,
 				A1FC101A2D08A88600450FDF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -165,9 +159,6 @@
 			);
 			dependencies = (
 				A1FC10392D08A88700450FDF /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				A1FC103A2D08A88700450FDF /* Recipe ViewerUITests */,
 			);
 			name = "Recipe ViewerUITests";
 			packageProductDependencies = (
