@@ -10,8 +10,9 @@ import Testing
 
 struct Recipe_ViewerTests {
 
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    @Test func fetchRecipes() async throws {
+        let manager = RecipeManager()
+        let response = try await manager.fetchRecipes()
+        #expect(response.count > 0)
     }
-
 }

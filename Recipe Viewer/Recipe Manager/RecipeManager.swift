@@ -33,11 +33,11 @@ class RecipeManager {
         
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        guard let recipes = try? decoder.decode([Recipe].self, from: data) else {
+        guard let recipes = try? decoder.decode(RecipesResponse.self, from: data) else {
             throw DownloadError.decodingFailed
         }
         
-        return recipes
+        return recipes.recipes
     }
 }
 
